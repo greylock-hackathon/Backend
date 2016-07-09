@@ -31,8 +31,14 @@ def authenticate(request):
     base_url='https://api.uber.com/v1/',
 )
 
-    parameters = {'response_type': 'code','redirect_uri': 'https://www.google.com/','scope': 'profile'}
+    parameters = {'response_type': 'code','scope': 'profile'}
 
 	#### Redirect user here to authorize your application
     login_url = uber_api.get_authorize_url(**parameters)
     return HttpResponse("Succesful Authentication" + login_url)
+
+def authentication_callback(request):
+    if request.GET.get('code'):
+        message = 'You submitted: %r' % request.GET['code']
+        print >> sys.stderr, message
+    return HttpResponse("Callback Handled" + message)
