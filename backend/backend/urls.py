@@ -15,9 +15,12 @@ Including another URLconf
 """
 from django.conf.urls import include, url
 from django.contrib import admin
+from . import views
 
 urlpatterns = [
-    url(r'^twilio/', include('twilio_app.urls')),
-    url(r'^uber_integration/', include('uber_integration.urls')),
+    url(r'^$', views.index),
+    url(r'^twilio/new_message/', views.new_message),
+    url(r'^twilio/texts/', views.texts),
+    url(r'^uber/redirect/', views.redirect),
     url(r'^admin/', admin.site.urls),
 ]
