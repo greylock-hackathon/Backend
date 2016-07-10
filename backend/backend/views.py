@@ -43,7 +43,6 @@ def request_ride(start, end):
 
 def index(request):
     return render(request, 'index.html', {}) 
-    #return HttpResponse(';)')
 
 @csrf_exempt
 def redirect(request):
