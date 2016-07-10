@@ -3,3 +3,4 @@ rauth==0.7.2
 requests==2.10.0
 twilio==5.4.0
 uber-rides==0.2.4
+googlemaps==2.4.4

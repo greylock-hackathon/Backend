@@ -1,3 +1,7 @@
+import sys, os
+explore_dir = os.path.dirname(os.path.realpath(__file__)) + '/../explore'
+sys.path.append(explore_dir)
+
 import json
 from django.shortcuts import render
 from django.http import HttpResponse
@@ -8,6 +12,7 @@ from subprocess import call
 from twilio import twiml
 from constants import *
 from django.shortcuts import render
+from geocode import geocode
 
 credential = None
 client = None
@@ -69,9 +74,10 @@ def new_message(request):
     data = json.loads(str(request.POST['Body']))
 
     if data[0] == UBER:
-        r.sms('uber')
         typ, lng, lat, dest = data
-        print(typ, lng, lat, dest)
+        dest_coords = geocode(dest)
+        r.sms(json.dumps(dest_coords))
+        print(dest_coords)
     elif data[0] == EXPLORE:
         r.sms('explore')
         typ, query, lng, lat = data
