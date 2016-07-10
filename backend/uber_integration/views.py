@@ -1,44 +1,52 @@
 from django.shortcuts import render
-
-# Create your views here.
-
 from django.http import HttpResponse
-from django.shortcuts import render
-from rauth import OAuth2Service
-import sys
-import requests
+from uber_rides.auth import AuthorizationCodeGrant
+from uber_rides.client import UberRidesClient
+from django.views.decorators.csrf import csrf_exempt
+from subprocess import call
+
+credential = None
+client = None
+
+auth_flow = AuthorizationCodeGrant(
+    'vvXhhV_qjiVbwcADOtvVjCK2aj91RJJd',
+    {'request'},
+    'LDqbDapADdf_ZFeZRe9fL_MKLga3mZ9Ryo3eIHMC',
+    'http://localhost:8000/uber_integration/redirect'
+)
+auth_url = auth_flow.get_authorization_url()
+call(['open', auth_url])
 
 def index(request):
-    return HttpResponse("Hello, world. You're at the uber integration index.")
+    return HttpResponse('ok')
 
-#sandbox where we test different uber related services
-def sandbox(request):
-    return render(request, 'uber_integration/sandbox.html', {})
+@csrf_exempt
+def redirect(request):
+    state = request.GET.get('state')
+    code = request.GET.get('code')
+    url = 'http://localhost:8000/uber_integration/redirect/?state={state}&code={code}'.format(state=state, code=code)
+    print(url)
+    try:
+        session = auth_flow.get_session(url)
+    except Exception as e:
+        print 'ERROR: ', e
+        return HttpResponse('redirect failed')
 
-def get_key(key_num):
-    file = open('../../keys.txt', 'r')
-    uber_key = file.read()
-    print >> sys.stderr, uber_key
-    return uber_key
+    client = UberRidesClient(session, sandbox_mode=True)
+    credentials = session.oauth2credential
 
-def authenticate(request):
-    uber_api = OAuth2Service(
-    client_id='vvXhhV_qjiVbwcADOtvVjCK2aj91RJJd',
-    client_secret= 'NX_tpqkReG6xzzA2JA26867pq5XLc7y4GWGSkFwn', #get_key(0), #'INSERT_CLIENT_SECRET',
-    name='Greylock Hackfest',
-    authorize_url='https://login.uber.com/oauth/authorize',
-    access_token_url='https://login.uber.com/oauth/token',
-    base_url='https://api.uber.com/v1/',
-)
+    response = client.get_products(37.77, -122.41)
+    products = response.json.get('products')
+    product_id = products[0].get('product_id')
 
-    parameters = {'response_type': 'code','scope': 'profile'}
+    response = client.request_ride(
+        product_id=product_id,
+        start_latitude=37.77,
+        start_longitude=-122.41,
+        end_latitude=37.79,
+        end_longitude=-122.41,
+    )
+    ride_details = response.json
+    ride_id = ride_details.get('request_id')
 
-	#### Redirect user here to authorize your application
-    login_url = uber_api.get_authorize_url(**parameters)
-    return HttpResponse("Succesful Authentication" + login_url)
-
-def authentication_callback(request):
-    if request.GET.get('code'):
-        message = 'You submitted: %r' % request.GET['code']
-        print >> sys.stderr, message
-    return HttpResponse("Callback Handled" + message)
+    return HttpResponse(ride_id)
