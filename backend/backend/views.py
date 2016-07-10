@@ -1,3 +1,8 @@
+import sys, os
+explore_dir = os.path.dirname(os.path.realpath(__file__)) + '/../explore'
+sys.path.append(explore_dir)
+
+import json
 from django.shortcuts import render
 from django.http import HttpResponse
 from uber_rides.auth import AuthorizationCodeGrant
@@ -5,7 +10,9 @@ from uber_rides.client import UberRidesClient
 from django.views.decorators.csrf import csrf_exempt
 from subprocess import call
 from twilio import twiml
+from constants import *
 from django.shortcuts import render
+from geocode import geocode
 
 credential = None
 client = None
@@ -62,9 +69,27 @@ def redirect(request):
 
 @csrf_exempt
 def new_message(request):
-    print request.POST
     r = twiml.Response()
-    r.sms(request.POST['Body'])
+    data = json.loads(str(request.POST['Body']))
+
+    if data[0] == UBER:
+        typ, lng, lat, dest = data
+        dest_coords = geocode(dest)
+        r.sms(json.dumps(dest_coords))
+        print(dest_coords)
+    elif data[0] == EXPLORE:
+        r.sms('explore')
+        typ, query, lng, lat = data
+        print(typ, query, lng, lat)
+    elif data[0] == DIRECTIONS:
+        r.sms('directions')
+        typ, choice = data
+        print(typ, choice)
+    elif data[0] == HELP:
+        r.sms('help')
+    else:
+        r.sms('not supported')
+
     return HttpResponse(str(r))
 
 def texts(request):
