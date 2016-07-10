@@ -1,33 +1,62 @@
 @font-face {
-  font-family: title;
-  src: url("./fonts/adam.otf");
+    font-family: title;
+    src: url("./fonts/adam.otf");
+}
+#title {
+    font-family: "title";
+    font-size: 35px;
+    margin-left: 10px;
+}
+.icon {
+    background-image: url("./images/icons/nav.png");
+    background-size: contain;
+    height: 50px;
+    width: 50px;
+    background-repeat: no-repeat;
+}
+.mdl-layout__header {
+    background-color: #3b3b3d;
+}
+.mdl-layout__header-row {
+    padding-left: 30px;
+}
+#welcome {
+    font-weight: lighter;
+    font-size: 16px;
+}
+.mdl-navigation.mdl-layout--large-screen-only {
+    margin-right: 100px;
 }
 .container {
-  position: absolute;
-  top: 0;
-  left: 0;
-  height: 90%;
-  width: 100%;
-  background-color: #393880;
+  text-align: center;
 }
-h1 {
-  font-family: "title";
-  color: white;
-  letter-spacing: 15px;
-  font-size: 60px;
+.demo-card-square {
+    margin-bottom: 30px;
+    display: inline-block;
+    margin-top: 30px;
 }
-[id="mountainOne"] {
-  position:absolute;
-  bottom: 0;
-  left: 0;
+
+    .demo-card-square {
+        margin-right: 3%;
+    }
+.mdl-card__supporting-text {
+  height: 100px;
 }
-[id="mountainTwo"] {
-  position:absolute;
-  bottom: 0;
-  left: 200px;
+#uber {
+  background-image: url("./images/icons/uber.png");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
 }
-[id="mountainThree"] {
-  position:absolute;
-  bottom: 0;
-  left: 350px;
+#explore {
+  background-image: url("./images/icons/explore.png");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
+}
+#help {
+  background-image: url("./images/icons/help.png");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
 }
