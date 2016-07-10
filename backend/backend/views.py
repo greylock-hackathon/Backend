@@ -7,6 +7,7 @@ from django.views.decorators.csrf import csrf_exempt
 from subprocess import call
 from twilio import twiml
 from constants import *
+from django.shortcuts import render
 
 credential = None
 client = None
@@ -43,7 +44,8 @@ def request_ride(start, end):
     ride_id = ride_details.get('request_id')
 
 def index(request):
-    return HttpResponse(';)')
+    return render(request, 'index.html', {})
+    #return HttpResponse(';)')
 
 @csrf_exempt
 def redirect(request):
