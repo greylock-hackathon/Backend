@@ -1,7 +1,6 @@
 import googlemaps
 from datetime import datetime
 
-
 gmaps = googlemaps.Client(key='AIzaSyDtu5AMA_k_Md2c-oFYM0VXmPQ1gOvuvec')
 
 now = datetime.now()
