@@ -2,12 +2,76 @@
 
 <!DOCTYPE html>
 <html>
-<link rel="stylesheet" type="text/css" href="{% static 'style.css' %}" />
 
+<head>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link rel="stylesheet" href="https://code.getmdl.io/1.1.3/material.indigo-pink.min.css">
+    <script defer src="https://code.getmdl.io/1.1.3/material.min.js"></script>
+    <meta charset="utf-8" name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="{% static 'style.css' %}" />
+    <title></title>
+</head>
 
 <body>
-<h1> Index.html </h1>
-<li> test </li>
+    <div class="mdl-layout mdl-layout--fixed-header">
+        <header class="mdl-layout__header">
+            <div class="mdl-layout__header-row">
+                <span class="icon"></span>
+                <span class="mdl-layout-title" id="title">Liberate</span>
+                <div class="mdl-layout-spacer"></div>
+                <nav class="mdl-navigation mdl-layout--large-screen-only">
+                </nav>
+            </div>
+        </header>
+    </div>
+    <div class="container">
+        <div class="demo-card-square mdl-card mdl-shadow--2dp card ">
+            <div class="mdl-card__title">
+                <h2 class="mdl-card__title-text">Ride</h2>
+            </div>
+            <div class="mdl-card__supporting-text" id="uber">
+
+            </div>
+            <div class="mdl-card__actions mdl-card--border">
+
+                <label class="mdl-switch mdl-js-switch mdl-js-ripple-effect" for="switch-1" style="text-align: left;">
+                    <input type="checkbox" id="switch-1" class="mdl-switch__input" checked>
+                    <span class="mdl-switch__label">Authenticated</span>
+                </label>
+
+            </div>
+
+        </div>
+        <div class="demo-card-square mdl-card mdl-shadow--2dp card">
+            <div class="mdl-card__title">
+                <h2 class="mdl-card__title-text">Explore</h2>
+            </div>
+            <div class="mdl-card__supporting-text" id="explore">
+            </div>
+            <div class="mdl-card__actions mdl-card--border">
+                <label class="mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect" for="checkbox-2" style="text-align: left;">
+                    <input type="checkbox" id="checkbox-2" class="mdl-checkbox__input" checked>
+                    <span class="mdl-checkbox__label">Verified Phone Number</span>
+                </label>
+            </div>
+
+        </div>
+        <div class="demo-card-square mdl-card mdl-shadow--2dp card">
+            <div class="mdl-card__title">
+                <h2 class="mdl-card__title-text">Help</h2>
+            </div>
+            <div class="mdl-card__supporting-text" id="help">
+            </div>
+            <div class="mdl-card__actions mdl-card--border">
+              <label class="mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect" for="checkbox-3" style="text-align: left;">
+                  <input type="checkbox" id="checkbox-3" class="mdl-checkbox__input" checked>
+                  <span class="mdl-checkbox__label">Verified Phone Number</span>
+              </label>
+            </div>
+
+        </div>
+    </div>
 
 </body>
+
 </html>
