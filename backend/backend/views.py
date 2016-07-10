@@ -65,7 +65,7 @@ def request_ride(start, end):
     ride_id = ride_details.get('request_id')
 
 def index(request):
-    return render(request, 'index.html', {})
+    return render(request, 'index.html', {}) 
 
 @csrf_exempt
 def redirect(request):
