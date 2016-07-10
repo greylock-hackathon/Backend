@@ -1,3 +1,33 @@
-li {
-    color: green;
-    }
+@font-face {
+  font-family: title;
+  src: url("./fonts/adam.otf");
+}
+.container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 90%;
+  width: 100%;
+  background-color: #393880;
+}
+h1 {
+  font-family: "title";
+  color: white;
+  letter-spacing: 15px;
+  font-size: 60px;
+}
+[id="mountainOne"] {
+  position:absolute;
+  bottom: 0;
+  left: 0;
+}
+[id="mountainTwo"] {
+  position:absolute;
+  bottom: 0;
+  left: 200px;
+}
+[id="mountainThree"] {
+  position:absolute;
+  bottom: 0;
+  left: 350px;
+}
