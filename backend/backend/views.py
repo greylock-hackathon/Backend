@@ -116,12 +116,11 @@ def new_message(request):
     if data[0] == UBER:
         typ, lng, lat, dest = data
         dest_coords = geocode(dest)
-        r.sms(json.dumps(dest_coords))
         ride_requests.append({'start': {'lng': lng, 'lat': lat}, 'end': dest_coords})
     elif data[0] == EXPLORE:
-        r.sms('explore')
         typ, query, lng, lat = data
-        print(typ, query, lng, lat)
+        res = encode_places(get_places(lng, lat, query))
+        r.sms(json.dumps(res))
     elif data[0] == DIRECTIONS:
         r.sms('directions')
         typ, choice = data
@@ -129,7 +128,7 @@ def new_message(request):
     elif data[0] == HELP:
         places = get_places('-122.1430','37.4419')
         encoded_message = encode_places(places)
-        print json.dumps(encoded_message) 
+        print json.dumps(encoded_message)
         r.sms(json.dumps(encoded_message))
     else:
         r.sms('not supported')
@@ -148,6 +147,6 @@ def uber_poll(request):
 
 @csrf_exempt
 def uber_update(request):
-    print(request.POST)
-    twilio_client.messages.create(to='+15714712696', from_='+12407021303', body=json.dumps(['data']))
+    print(dict(request.POST))
+    twilio_client.messages.create(to='+16506603327', from_='+12407021303', body=json.dumps(dict(request.POST)))
     return HttpResponse('ok')
