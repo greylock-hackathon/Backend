@@ -12,6 +12,10 @@ def geocode(address):
         'lng': result['geometry']['location']['lng']
     }
 
+def reverse_geocode(lng, lat):
+    return gmaps.reverse_geocode((lat, lng))[0]['formatted_address']
+
 if __name__ == '__main__':
     ll = geocode('1010 Bush st., San Francisco')
-    print ll
+    print(ll)
+    print(reverse_geocode(-73.961452,40.714224))

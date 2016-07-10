@@ -1,4 +1,4 @@
-from googleplaces import GooglePlaces, types
+from googleplaces import GooglePlaces
 
 API_KEY = 'AIzaSyDtu5AMA_k_Md2c-oFYM0VXmPQ1gOvuvec'
 
@@ -13,7 +13,7 @@ def get_places(lng, lat, query):
         },
         keyword=query,
         radius=10000,
-        # types=types_
+        rankby='distance'
     )
 
     return [{
@@ -25,7 +25,6 @@ def get_places(lng, lat, query):
 
 def encode_places(places):
     return [[
-        1,
         place['lng'],
         place['lat'],
         place['name']

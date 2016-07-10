@@ -19,7 +19,7 @@ def get_directions(start, end):
 
     return directions
 
-def format_directions_json(directions):
+def format_directions(directions):
     regex = re.compile(r'<.*?>')
     formatted_directions = []
     for step in directions[0]['legs'][0]['steps']:
@@ -32,6 +32,5 @@ if __name__ == '__main__':
         '655 Gilbert Ave Menlo Park California',
         'Palo Alto Caltrain Station'
     )
-    formatted_directions = format_directions_json(directions)
-    for direction in formatted_directions:
-        print direction
+    formatted_directions = format_directions(directions)
+    print formatted_directions

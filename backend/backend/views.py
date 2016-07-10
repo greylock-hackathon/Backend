@@ -117,19 +117,23 @@ def new_message(request):
         typ, lng, lat, dest = data
         dest_coords = geocode(dest)
         ride_requests.append({'start': {'lng': lng, 'lat': lat}, 'end': dest_coords})
+        return HttpResponse(str(r))
     elif data[0] == EXPLORE:
-        typ, query, lng, lat = data
-        res = encode_places(get_places(lng, lat, query))
-        r.sms(json.dumps(res))
+        typ, lng, lat, query = data
+        places = json.dumps(encode_places(get_places(lng, lat, query)), separators=(',',':'))
+        r.sms(places + '~')
     elif data[0] == DIRECTIONS:
         r.sms('directions')
-        typ, choice = data
-        print(typ, choice)
+        typ, lng, lat, end = data
+        start = reverse_geocode(lng, lat)
+        directions = get_directions(start, end)
+        print(directions)
+        r.sms(json.dumps(directions, separators=(',',':')) + '~')
     elif data[0] == HELP:
         places = get_places('-122.1430','37.4419')
         encoded_message = encode_places(places)
-        print json.dumps(encoded_message)
-        r.sms(json.dumps(encoded_message))
+        print json.dumps(encoded_message, separators=(',',':'))
+        r.sms(json.dumps(encoded_message, separators=(',',':')))
     else:
         r.sms('not supported')
 
@@ -142,11 +146,11 @@ def uber_poll(request):
         current = json.dumps(ride_requests)
         ride_requests = []
     except Exception as e:
-        return HttpResponse(json.dumps({'error': str(e)}), content_type='application/json')
+        return HttpResponse(json.dumps({'error': str(e)}, separators=(',',':')), content_type='application/json')
     return HttpResponse(current, content_type='application/json')
 
 @csrf_exempt
 def uber_update(request):
     print(dict(request.POST))
-    twilio_client.messages.create(to='+16506603327', from_='+12407021303', body=json.dumps(dict(request.POST)))
+    twilio_client.messages.create(to='+16506603327', from_='+12407021303', body=json.dumps(dict(request.POST), separators=(',',':')) + '~')
     return HttpResponse('ok')
