@@ -40,7 +40,6 @@ def request_ride(start, end):
     ride_details = response.json
     ride_id = ride_details.get('request_id')
 
-
 def index(request):
     return HttpResponse(';)')
 
@@ -59,7 +58,6 @@ def redirect(request):
     client = UberRidesClient(session, sandbox_mode=True)
 
     return HttpResponse('authentication successful')
-
 
 @csrf_exempt
 def new_message(request):
