@@ -1,3 +1,4 @@
+import json
 from django.shortcuts import render
 from django.http import HttpResponse
 from uber_rides.auth import AuthorizationCodeGrant
@@ -5,6 +6,7 @@ from uber_rides.client import UberRidesClient
 from django.views.decorators.csrf import csrf_exempt
 from subprocess import call
 from twilio import twiml
+from constants import *
 
 credential = None
 client = None
@@ -61,9 +63,26 @@ def redirect(request):
 
 @csrf_exempt
 def new_message(request):
-    print request.POST
     r = twiml.Response()
-    r.sms(request.POST['Body'])
+    data = json.loads(str(request.POST['Body']))
+
+    if data[0] == UBER:
+        r.sms('uber')
+        typ, lng, lat, dest = data
+        print(typ, lng, lat, dest)
+    elif data[0] == EXPLORE:
+        r.sms('explore')
+        typ, query, lng, lat = data
+        print(typ, query, lng, lat)
+    elif data[0] == DIRECTIONS:
+        r.sms('directions')
+        typ, choice = data
+        print(typ, choice)
+    elif data[0] == HELP:
+        r.sms('help')
+    else:
+        r.sms('not supported')
+
     return HttpResponse(str(r))
 
 def texts(request):
