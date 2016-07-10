@@ -13,6 +13,8 @@ from twilio import twiml
 from constants import *
 from django.shortcuts import render
 from geocode import geocode
+from directions import *
+from places import *
 import requests
 import sched, time
 from threading import Thread
@@ -125,7 +127,10 @@ def new_message(request):
         typ, choice = data
         print(typ, choice)
     elif data[0] == HELP:
-        r.sms('help')
+        places = get_places('-122.1430','37.4419')
+        encoded_message = encode_places(places)
+        print json.dumps(encoded_message) 
+        r.sms(json.dumps(encoded_message))
     else:
         r.sms('not supported')
 
