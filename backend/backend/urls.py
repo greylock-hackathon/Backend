@@ -6,6 +6,7 @@ urlpatterns = [
     url(r'^$', views.index),
     url(r'^twilio/new_message', views.new_message),
     url(r'^twilio/texts/', views.texts),
-    url(r'^uber/redirect/', views.redirect),
+    url(r'^uber/redirect', views.redirect),
+    url(r'^uber/poll/$', views.uber_poll),
     url(r'^admin/', admin.site.urls),
 ]

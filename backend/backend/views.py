@@ -13,13 +13,25 @@ from twilio import twiml
 from constants import *
 from django.shortcuts import render
 from geocode import geocode
+import requests
+import sched, time
+from threading import Thread
 
 credential = None
 client = None
 auth_flow = None
 text = ''
+ride_requests = []
 
-# authenticate()
+def start_uber_poll():
+    s = sched.scheduler(time.time, time.sleep)
+    s.enter(5, 1, poll_uber_message, (s,))
+    s.run()
+
+def poll_uber_message(sc):
+    r = requests.get('http://130.211.120.248:8000/uber/poll/')
+    print(r.json())
+    sc.enter(5, 1, poll_uber_message, (sc,))
 
 def authenticate():
     global auth_flow
@@ -32,32 +44,36 @@ def authenticate():
     auth_url = auth_flow.get_authorization_url()
     call(['open', auth_url])
 
-def request_ride(start, end):
+if os.environ.get('LOCAL') == 'true':
+    authenticate()
+    thread = Thread(target=start_uber_poll)
+    thread.start()
 
+def request_ride(start, end):
     response = client.get_products(start[0], start[1])
     products = response.json.get('products')
     product_id = products[0].get('product_id')
 
     response = client.request_ride(
         product_id=product_id,
-        start_latitude=start[1],
-        start_longitude=-start[0],
-        end_latitude=end[1],
-        end_longitude=end[0],
+        start_latitude=start['lat'],
+        start_longitude=-start['lng'],
+        end_latitude=end['lat'],
+        end_longitude=end['lng'],
     )
     ride_details = response.json
     ride_id = ride_details.get('request_id')
 
 def index(request):
     return render(request, 'index.html', {})
-    #return HttpResponse(';)')
 
 @csrf_exempt
 def redirect(request):
     state = request.GET.get('state')
     code = request.GET.get('code')
-    url = 'http://localhost:8000/uber_integration/redirect/?state={state}&code={code}'.format(state=state, code=code)
-    print(url)
+
+    url = 'http://localhost:8000/uber/redirect/?state={state}&code={code}'.format(state=state, code=code)
+
     try:
         session = auth_flow.get_session(url)
     except Exception as e:
@@ -77,7 +93,7 @@ def new_message(request):
         typ, lng, lat, dest = data
         dest_coords = geocode(dest)
         r.sms(json.dumps(dest_coords))
-        print(dest_coords)
+        ride_requests.append({'start': {'lng': lng, 'lat': lat}, 'end': dest_coords})
     elif data[0] == EXPLORE:
         r.sms('explore')
         typ, query, lng, lat = data
@@ -92,6 +108,16 @@ def new_message(request):
         r.sms('not supported')
 
     return HttpResponse(str(r))
+
+def uber_poll(request):
+    global ride_requests
+    current = None
+    try:
+        current = json.dumps(ride_requests)
+        ride_requests = []
+    except Exception as e:
+        return HttpResponse(json.dumps({'error': str(e)}), content_type='application/json')
+    return HttpResponse(current, content_type='application/json')
 
 def texts(request):
     return HttpResponse(text)
